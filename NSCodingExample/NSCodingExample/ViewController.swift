@@ -40,6 +40,5 @@ class ViewController: UIViewController {
         userDefaults.set(data, forKey: "appSettings")
     }
 
-
 }
 
