@@ -9,17 +9,58 @@
 import UIKit
 
 class ViewController: UIViewController {
+    
+    var favorite: Bool = false
+    
+    var settingsBarButton: UIBarButtonItem?
+    
+    var favoriteBarButton: UIBarButtonItem?
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        
+        let settingsImage = UIImage(named: "ic_settings_48pt")?.withRenderingMode(.alwaysTemplate)
+        let settingsButton = UIButton(type: .system)
+        settingsButton.tintColor = .black
+        settingsButton.setImage(settingsImage, for: .normal)
+        settingsButton.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+        settingsButton.addTarget(self, action: #selector(settingsButtonTapped), for: .touchUpInside)
+        self.settingsBarButton = UIBarButtonItem(customView: settingsButton)
+        self.navigationItem.setLeftBarButton(settingsBarButton, animated: false)
+        
+        let favoriteImage = UIImage(named: "ic_favorite_border_48pt")
+        let favoriteButton = UIButton(type: .system)
+        favoriteButton.tintColor = .black
+        favoriteButton.setImage(favoriteImage, for: .normal)
+        favoriteButton.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+        favoriteButton.addTarget(self, action: #selector(favoriteButtonTapped), for: .touchUpInside)
+        self.favoriteBarButton = UIBarButtonItem(customView: favoriteButton)
+        self.navigationItem.setRightBarButton(favoriteBarButton, animated: false)
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    
+    @objc func settingsButtonTapped(_ sender: UIButton) {
+        self.settingsBarButton?.customView?.transform = CGAffineTransform(rotationAngle: CGFloat(CGFloat.pi * -3/4))
+        UIView.animate(withDuration: 0.8) {
+            self.settingsBarButton?.customView?.transform = .identity
+        }
     }
-
+    
+    @objc func favoriteButtonTapped(_ sender: UIButton) {
+        self.favoriteBarButton?.customView?.transform = CGAffineTransform(scaleX: 0, y: 0)
+        UIView.animate(withDuration: 0.5,
+                       delay: 0.0,
+                       usingSpringWithDamping: 0.6,
+                       initialSpringVelocity: 10,
+                       options: .curveEaseInOut,
+                       animations: {
+                        self.favorite = !self.favorite
+                        let image = self.favorite ? UIImage(named: "ic_favorite_48pt") : UIImage(named: "ic_favorite_border_48pt")
+                        if let button = self.favoriteBarButton?.customView as? UIButton {
+                            button.setImage(image, for: .normal)
+                        }
+                        self.favoriteBarButton?.customView?.transform = .identity
+        }, completion: nil)
+    }
 
 }
 
